@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emaan's Birthday Countdown</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#9c27b0">
+    <meta name="description" content="Beautiful countdown to Emaan's birthday">
+    <link rel="icon" type="image/png" href="/icon-192.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff69b4, #9c27b0, #e91e63);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            max-width: 600px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .countdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .time-unit {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px 10px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            display: block;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .label {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-top: 5px;
+            opacity: 0.8;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            margin: 30px 0;
+            font-style: italic;
+            opacity: 0.9;
+        }
+
+        .install-prompt {
+            margin-top: 20px;
+            padding: 15px 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        .install-prompt:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .notification-toggle {
+            margin-top: 15px;
+            padding: 12px 25px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50px;
+            color: white;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .notification-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .number {
+                font-size: 2rem;
+            }
+            
+            .countdown {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💖 Emaan's Birthday 💖</h1>
+        <p class="subtitle">Countdown to July 29, 2025</p>
+        
+        <div class="countdown">
+            <div class="time-unit">
+                <span class="number" id="days">0</span>
+                <span class="label">Days</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="hours">0</span>
+                <span class="label">Hours</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="minutes">0</span>
+                <span class="label">Minutes</span>
+            </div>
+            <div class="time-unit">
+                <span class="number" id="seconds">0</span>
+                <span class="label">Seconds</span>
+            </div>
+        </div>
+        
+        <p class="message" id="message">Get ready for an amazing celebration! 🎉</p>
+        
+        <button class="install-prompt" id="installBtn">Install App</button>
+        <button class="notification-toggle" id="notificationBtn">Enable Daily Reminders</button>
+    </div>
+
+    <script>
+        // Target date: July 29, 2025
+        const targetDate = new Date('2025-07-29T00:00:00').getTime();
+        
+        // PWA Install prompt
+        let deferredPrompt;
+        const installBtn = document.getElementById('installBtn');
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installBtn.style.display = 'block';
+        });
+
+        installBtn.addEventListener('click', async () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const result = await deferredPrompt.userChoice;
+                deferredPrompt = null;
+                installBtn.style.display = 'none';
+            }
+        });
+
+        // Notification functionality
+        const notificationBtn = document.getElementById('notificationBtn');
+        
+        notificationBtn.addEventListener('click', async () => {
+            if ('Notification' in window && 'serviceWorker' in navigator) {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                    notificationBtn.textContent = 'Reminders Enabled ✓';
+                    notificationBtn.style.background = 'rgba(76, 175, 80, 0.3)';
+                    
+                    // Schedule daily notifications
+                    if ('serviceWorker' in navigator && 'PushManager' in window) {
+                        const registration = await navigator.serviceWorker.ready;
+                        // In a real app, you'd set up push notifications with a server
+                        // For now, we'll use local notifications
+                        scheduleLocalNotifications();
+                    }
+                }
+            }
+        });
+
+        function scheduleLocalNotifications() {
+            // Schedule notification for tomorrow and subsequent days
+            const now = new Date();
+            const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+            tomorrow.setHours(9, 0, 0, 0); // 9 AM
+            
+            const timeUntilTomorrow = tomorrow.getTime() - now.getTime();
+            
+            setTimeout(() => {
+                if (targetDate > Date.now()) {
+                    new Notification("Emaan's Birthday Countdown", {
+                        body: `${Math.ceil((targetDate - Date.now()) / (1000 * 60 * 60 * 24))} days until Emaan's birthday! 💖`,
+                        icon: '/icon-192.png',
+                        badge: '/icon-192.png'
+                    });
+                }
+                
+                // Schedule for the next day
+                setInterval(() => {
+                    if (targetDate > Date.now()) {
+                        new Notification("Emaan's Birthday Countdown", {
+                            body: `${Math.ceil((targetDate - Date.now()) / (1000 * 60 * 60 * 24))} days until Emaan's birthday! 💖`,
+                            icon: '/icon-192.png',
+                            badge: '/icon-192.png'
+                        });
+                    }
+                }, 24 * 60 * 60 * 1000); // Every 24 hours
+            }, timeUntilTomorrow);
+        }
+
+        // Countdown timer
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = targetDate - now;
+
+            if (timeLeft > 0) {
+                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+
+                // Update message based on time left
+                if (days === 0) {
+                    document.getElementById('message').textContent = "Today is the special day! 🎂✨";
+                } else if (days === 1) {
+                    document.getElementById('message').textContent = "Tomorrow is the big day! 🎈";
+                } else if (days <= 7) {
+                    document.getElementById('message').textContent = "Less than a week to go! 🌟";
+                } else if (days <= 30) {
+                    document.getElementById('message').textContent = "The countdown is getting exciting! 💕";
+                } else {
+                    document.getElementById('message').textContent = "Get ready for an amazing celebration! 🎉";
+                }
+            } else {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                document.getElementById('message').textContent = "🎉 Happy Birthday Emaan! 🎂✨💖";
+            }
+        }
+
+        // Update countdown every second
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js');
+        }
+    </script>
+</body>
+</html>

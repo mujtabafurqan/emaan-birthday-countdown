@@ -1,0 +1,27 @@
+{
+  "name": "Emaan's Birthday Countdown",
+  "short_name": "Birthday Countdown",
+  "description": "A beautiful countdown to Emaan's birthday with daily reminders",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ff69b4",
+  "theme_color": "#9c27b0",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["lifestyle", "entertainment"],
+  "lang": "en",
+  "dir": "ltr"
+}

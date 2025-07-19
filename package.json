@@ -1,0 +1,17 @@
+{
+  "name": "emaan-birthday-countdown",
+  "version": "1.0.0",
+  "description": "A beautiful PWA countdown to Emaan's birthday",
+  "main": "index.html",
+  "scripts": {
+    "generate-icons": "node generate-icons.js",
+    "start": "python3 -m http.server 8000",
+    "build": "echo 'Build complete - ready for deployment'"
+  },
+  "keywords": ["pwa", "birthday", "countdown", "notifications"],
+  "author": "Mujtaba",
+  "license": "MIT",
+  "devDependencies": {
+    "canvas": "^2.11.2"
+  }
+}
