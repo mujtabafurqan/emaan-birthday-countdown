@@ -1,4 +1,4 @@
-const CACHE_NAME = 'emaan-birthday-v1';
+const CACHE_NAME = 'emaan-birthday-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -15,6 +15,14 @@ self.addEventListener('install', event => {
         return cache.addAll(urlsToCache);
       })
       .then(() => {
+        // Skip waiting and notify clients about update
+        self.clients.matchAll().then(clients => {
+          clients.forEach(client => {
+            client.postMessage({
+              type: 'SW_UPDATE_AVAILABLE'
+            });
+          });
+        });
         return self.skipWaiting();
       })
   );
@@ -32,6 +40,14 @@ self.addEventListener('activate', event => {
         })
       );
     }).then(() => {
+      // Notify all clients that update is complete
+      self.clients.matchAll().then(clients => {
+        clients.forEach(client => {
+          client.postMessage({
+            type: 'SW_UPDATE_READY'
+          });
+        });
+      });
       return self.clients.claim();
     })
   );
@@ -102,6 +118,13 @@ self.addEventListener('notificationclick', event => {
     event.waitUntil(
       clients.openWindow('/')
     );
+  }
+});
+
+// Handle skip waiting message from client
+self.addEventListener('message', event => {
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
   }
 });
 

@@ -137,7 +137,7 @@
             height: 100%;
             z-index: -1;
             overflow: hidden;
-            opacity: 0.3;
+            opacity: 0.6;
         }
 
         .photo-slider {
@@ -158,7 +158,7 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: blur(1px) brightness(0.7);
+            filter: blur(0.5px) brightness(0.85) contrast(1.1);
             transition: all 0.5s ease;
         }
 
@@ -238,6 +238,67 @@
             transform: scale(1.1);
         }
 
+        /* Update notification */
+        .update-notification {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(76, 175, 80, 0.9);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            z-index: 1001;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: none;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .update-notification.show {
+            display: flex;
+        }
+
+        .update-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .update-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .refresh-btn {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1) rotate(180deg);
+        }
+
         /* Photo upload area */
         .photo-upload {
             margin-top: 20px;
@@ -293,15 +354,41 @@
 
         @media (max-width: 480px) {
             h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
+                margin-bottom: 8px;
             }
             
-            .number {
-                font-size: 2rem;
+            .subtitle {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+            
+            .container {
+                padding: 25px 20px;
+                max-width: 90%;
             }
             
             .countdown {
                 grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+                margin: 20px 0;
+            }
+            
+            .time-unit {
+                padding: 15px 8px;
+            }
+            
+            .number {
+                font-size: 1.8rem;
+            }
+            
+            .label {
+                font-size: 0.8rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+                margin: 20px 0;
             }
 
             .gallery-toggle {
@@ -311,9 +398,22 @@
                 font-size: 1.2rem;
             }
 
+            .refresh-btn {
+                bottom: 75px;
+                right: 15px;
+                padding: 10px;
+                font-size: 1rem;
+            }
+
             .photo-upload {
                 margin-top: 15px;
                 padding: 15px;
+            }
+            
+            .update-notification {
+                top: 10px;
+                padding: 12px 20px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -323,19 +423,19 @@
     <div class="photo-gallery" id="photoGallery">
         <div class="photo-slider" id="photoSlider">
             <div class="photo-slide">
-                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&q=80" alt="Romantic moment" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&q=90" alt="Romantic moment" loading="lazy">
             </div>
             <div class="photo-slide">
-                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80" alt="Beautiful memory" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1200&q=90" alt="Beautiful memory" loading="lazy">
             </div>
             <div class="photo-slide">
-                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&q=80" alt="Special day" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200&q=90" alt="Special day" loading="lazy">
             </div>
             <div class="photo-slide">
-                <img src="https://images.unsplash.com/photo-1518709779329-d0c176e80adc?w=800&q=80" alt="Love story" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1518709779329-d0c176e80adc?w=1200&q=90" alt="Love story" loading="lazy">
             </div>
             <div class="photo-slide">
-                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80" alt="Happy times" loading="lazy">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=90" alt="Happy times" loading="lazy">
             </div>
         </div>
     </div>
@@ -343,8 +443,17 @@
     <!-- Floating Hearts -->
     <div class="floating-hearts" id="floatingHearts"></div>
 
+    <!-- Update Notification -->
+    <div class="update-notification" id="updateNotification">
+        <span>✨ New version available!</span>
+        <button class="update-btn" id="updateBtn">Refresh</button>
+    </div>
+
     <!-- Gallery Toggle Button -->
     <button class="gallery-toggle" id="galleryToggle" title="Toggle Photo Gallery">📸</button>
+    
+    <!-- Refresh Button -->
+    <button class="refresh-btn" id="refreshBtn" title="Refresh App">🔄</button>
 
     <div class="container">
         <h1>💖 Emaan's Birthday 💖</h1>
@@ -514,7 +623,7 @@
         // Toggle gallery visibility
         galleryToggle.addEventListener('click', () => {
             galleryVisible = !galleryVisible;
-            photoGallery.style.opacity = galleryVisible ? '0.3' : '0';
+            photoGallery.style.opacity = galleryVisible ? '0.6' : '0';
             photoUpload.classList.toggle('active');
             galleryToggle.textContent = galleryVisible ? '📸' : '🖼️';
         });
@@ -580,11 +689,11 @@
         // Get default photos
         function getDefaultPhotos() {
             return [
-                'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&q=80',
-                'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800&q=80',
-                'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=800&q=80',
-                'https://images.unsplash.com/photo-1518709779329-d0c176e80adc?w=800&q=80',
-                'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=800&q=80'
+                'https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&q=90',
+                'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=1200&q=90',
+                'https://images.unsplash.com/photo-1583939003579-730e3918a45a?w=1200&q=90',
+                'https://images.unsplash.com/photo-1518709779329-d0c176e80adc?w=1200&q=90',
+                'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=1200&q=90'
             ];
         }
 
@@ -611,10 +720,77 @@
         updateGallery();
         displayUploadedPhotos();
 
-        // Register service worker
+        // PWA Update Management
+        let swRegistration = null;
+        const updateNotification = document.getElementById('updateNotification');
+        const updateBtn = document.getElementById('updateBtn');
+        const refreshBtn = document.getElementById('refreshBtn');
+
+        // Register service worker with update detection
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js');
+            navigator.serviceWorker.register('/sw.js').then(registration => {
+                swRegistration = registration;
+                
+                // Check for updates
+                registration.addEventListener('updatefound', () => {
+                    const newWorker = registration.installing;
+                    newWorker.addEventListener('statechange', () => {
+                        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                            // New version available
+                            showUpdateNotification();
+                        }
+                    });
+                });
+            });
+
+            // Listen for messages from service worker
+            navigator.serviceWorker.addEventListener('message', event => {
+                if (event.data && event.data.type === 'SW_UPDATE_AVAILABLE') {
+                    showUpdateNotification();
+                } else if (event.data && event.data.type === 'SW_UPDATE_READY') {
+                    // Update is ready, refresh the page
+                    window.location.reload();
+                }
+            });
         }
+
+        // Show update notification
+        function showUpdateNotification() {
+            updateNotification.classList.add('show');
+            
+            // Auto-hide after 10 seconds
+            setTimeout(() => {
+                updateNotification.classList.remove('show');
+            }, 10000);
+        }
+
+        // Handle update button click
+        updateBtn.addEventListener('click', () => {
+            updateApp();
+        });
+
+        // Handle refresh button click
+        refreshBtn.addEventListener('click', () => {
+            updateApp();
+        });
+
+        // Update the app
+        function updateApp() {
+            if (swRegistration && swRegistration.waiting) {
+                // Tell the waiting service worker to skip waiting
+                swRegistration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            } else {
+                // Fallback: just reload the page
+                window.location.reload();
+            }
+        }
+
+        // Check for updates periodically (every 30 minutes)
+        setInterval(() => {
+            if (swRegistration) {
+                swRegistration.update();
+            }
+        }, 30 * 60 * 1000);
     </script>
 </body>
 </html>
